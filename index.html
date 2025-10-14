@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lit & Laid — Free Reading Hub</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="logo">
+        <img src="assets/lit-laid-logo.png" alt="Lit & Laid logo" class="logo-img" />
+        <div>
+          <div>Lit &amp; Laid</div>
+          <div class="tagline">Get lit. Stay laid-back.</div>
+        </div>
+      </div>
+      <div class="spacer"></div>
+      <div class="user" id="userBox">
+        <small id="welcomeTxt">Not signed in</small>
+        <input id="username" class="input" placeholder="Username" autocomplete="username" />
+        <input id="password" class="input" type="password" placeholder="Password" autocomplete="current-password" />
+        <button class="btn" id="loginBtn">Log in</button>
+        <button class="btn" id="logoutBtn" style="display:none">Log out</button>
+      </div>
+    </div>
+
+    <h1>Lit &amp; Laid Reading Hub</h1>
+    <p class="lead">Browse free eBooks, poetry sites, extra resources, and manage your wishlist. Add your own books via ISBN scan or cover photo.</p>
+
+    <!-- Tabs -->
+    <div class="tabs" role="tablist" aria-label="Collections">
+      <button class="tab-btn active" data-tab="ebooks" role="tab" aria-selected="true" aria-controls="panel-ebooks">📚 Free eBook Sites</button>
+      <button class="tab-btn" data-tab="poetry" role="tab" aria-selected="false" aria-controls="panel-poetry">📝 Poetry Sites</button>
+      <button class="tab-btn" data-tab="extras" role="tab" aria-selected="false" aria-controls="panel-extras">🧰 Extra Resources</button>
+      <button class="tab-btn" data-tab="wishlist" role="tab" aria-selected="false" aria-controls="panel-wishlist">⭐ Wishlist</button>
+    </div>
+
+    <!-- Ebooks Tab -->
+    <section id="panel-ebooks" class="tab-panel active" role="tabpanel">
+      <div class="panel">
+        <div class="controls" data-controls="ebooks">
+          <label class="pill"><input type="checkbox" data-filter="downloadable" checked> 📥 Downloadable</label>
+          <label class="pill"><input type="checkbox" data-filter="online" checked> 🌐 Read Online / Deals</label>
+          <label class="pill"><input type="checkbox" data-filter="audiobook" checked> 🎧 Audiobook</label>
+          <label class="pill"><input type="checkbox" data-filter="mixed" checked> ⚖️ Mixed / Borrow</label>
+          <div class="search"><input type="search" placeholder="Search sites or notes…" data-search="ebooks" /></div>
+          <button class="btn copy" data-copy="ebooks">Copy table</button>
+        </div>
+        <div class="count" data-count="ebooks"></div>
+      </div>
+      <div class="panel">
+        <table data-table="ebooks">
+          <thead><tr><th>#</th><th>Site</th><th>Type</th><th>Notes</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <p class="hint">Tip: Click ⭐ to add a site to your wishlist.</p>
+      </div>
+    </section>
+
+    <!-- Poetry Tab -->
+    <section id="panel-poetry" class="tab-panel" role="tabpanel">
+      <div class="panel">
+        <div class="controls" data-controls="poetry">
+          <label class="pill"><input type="checkbox" data-filter="downloadable" checked> 📥 Downloadable</label>
+          <label class="pill"><input type="checkbox" data-filter="online" checked> 🌐 Online</label>
+          <label class="pill"><input type="checkbox" data-filter="audiobook" checked> 🎧 Audio</label>
+          <label class="pill"><input type="checkbox" data-filter="mixed" checked> ⚖️ Mixed</label>
+          <div class="search"><input type="search" placeholder="Search poetry sites or notes…" data-search="poetry" /></div>
+          <button class="btn copy" data-copy="poetry">Copy table</button>
+        </div>
+        <div class="count" data-count="poetry"></div>
+      </div>
+      <div class="panel">
+        <table data-table="poetry">
+          <thead><tr><th>#</th><th>Site</th><th>Type</th><th>Notes</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <p class="hint">Sourced from your list. Click ⭐ to save interesting sources.</p>
+      </div>
+    </section>
+
+    <!-- Extras Tab -->
+    <section id="panel-extras" class="tab-panel" role="tabpanel">
+      <div class="panel">
+        <div class="controls" data-controls="extras">
+          <div class="search"><input type="search" placeholder="Search extra resources…" data-search="extras" /></div>
+          <button class="btn copy" data-copy="extras">Copy table</button>
+        </div>
+        <div class="count" data-count="extras"></div>
+      </div>
+      <div class="panel">
+        <table data-table="extras">
+          <thead><tr><th>#</th><th>Resource</th><th>Type</th><th>Notes</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <p class="hint">Added per your request. Suggest more and we’ll grow this tab.</p>
+      </div>
+    </section>
+
+    <!-- Wishlist Tab -->
+    <section id="panel-wishlist" class="tab-panel" role="tabpanel">
+      <div class="panel">
+        <h3 style="margin:0 0 8px">Your Wishlist</h3>
+        <p class="lead" style="margin:0 0 12px">Save sites and books. Assign items, add notes, export to Markdown.</p>
+        <div class="wl-flex">
+          <!-- Manual Add -->
+          <div class="wl-card">
+            <div class="wl-title">➕ Add a book (manual)</div>
+            <div style="display:grid;gap:8px;margin-top:8px">
+              <input id="manualTitle" class="input" placeholder="Title" />
+              <input id="manualAuthor" class="input" placeholder="Author (optional)" />
+              <input id="manualUrl" class="input" placeholder="Link (optional)" />
+              <button class="btn ok" id="addManual">Add to Wishlist</button>
+            </div>
+          </div>
+          <!-- ISBN Add -->
+          <div class="wl-card">
+            <div class="wl-title">📷 Add by ISBN (camera scan or type)</div>
+            <div class="scanner">
+              <div class="video-wrap">
+                <video id="video" playsinline></video>
+              </div>
+              <div class="wl-grid">
+                <input id="isbnInput" class="input" placeholder="ISBN-13 (e.g., 9781234567897)" />
+                <button class="btn" id="addIsbnBtn">Add ISBN</button>
+              </div>
+              <div class="wl-grid">
+                <button class="btn" id="startScan">Start camera scan</button>
+                <button class="btn danger" id="stopScan" disabled>Stop</button>
+              </div>
+              <div class="scan-status" id="scanStatus">Scanner: <span class="kbd">idle</span></div>
+              <small class="hint">Uses the browser’s <code>BarcodeDetector</code> if available. If not supported, just type the ISBN above.</small>
+            </div>
+          </div>
+          <!-- Photo Add -->
+          <div class="wl-card">
+            <div class="wl-title">🖼️ Add by cover/title photo</div>
+            <div style="display:grid;gap:8px;margin-top:8px">
+              <input id="photoTitle" class="input" placeholder="Title (type what you see on the cover)" />
+              <input id="photoAuthor" class="input" placeholder="Author (optional)" />
+              <input id="photoFile" class="input" type="file" accept="image/*" />
+              <button class="btn ok" id="addPhoto">Attach and Save</button>
+              <small class="hint">No OCR — we store your typed title + the photo for reference.</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <button class="btn" id="exportMd">Export Markdown</button>
+          <button class="btn danger" id="clearWishlist">Clear Wishlist</button>
+          <span class="count" id="wlCount"></span>
+        </div>
+      </div>
+
+      <div id="wishlistList" class="panel"></div>
+    </section>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
