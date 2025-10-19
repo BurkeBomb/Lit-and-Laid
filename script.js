@@ -613,3 +613,15 @@ stopScan.addEventListener('click', () =>{
 
 // By default, scanning is idle.
 setScanState("idle");
+
+/* ------------------ Skip link → Wishlist ------------------ */
+document.getElementById('skipToWishlist')?.addEventListener('click', (e) =>{
+  e.preventDefault();
+  const tab = document.querySelector('.tab-btn[data-tab="wishlist"]');
+  if(tab) tab.click();
+  const panel = document.getElementById('panel-wishlist');
+  if(panel){
+    if(!panel.hasAttribute('tabindex')) panel.setAttribute('tabindex','-1');
+    panel.focus();
+  }
+});
