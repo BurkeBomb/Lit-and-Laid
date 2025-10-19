@@ -271,6 +271,90 @@ renderTable("ebooks", ebooksData);
 renderTable("poetry", poetryData);
 renderTable("extras", extrasData);
 
+/* ------------------ Tabs: click + keyboard ------------------ */
+
+(function initTabs(){
+  const tablist = document.querySelector('.tabs[role="tablist"]') || document.querySelector('.tabs');
+  const tabs = [...document.querySelectorAll('.tab-btn[role="tab"], .tab-btn')];
+  const panels = [...document.querySelectorAll('.tab-panel[role="tabpanel"], .tab-panel')];
+  if(!tabs.length || !panels.length) return;
+
+  // Ensure roles/ids and ARIA linkages
+  tabs.forEach(btn => {
+    if(!btn.hasAttribute('role')) btn.setAttribute('role','tab');
+    const ns = btn.getAttribute('data-tab');
+    const id = btn.id || `tab-${ns || Math.random().toString(36).slice(2,7)}`;
+    btn.id = id;
+    const panel = document.getElementById(`panel-${ns}`);
+    if(panel){
+      if(!panel.hasAttribute('role')) panel.setAttribute('role','tabpanel');
+      panel.setAttribute('aria-labelledby', id);
+    }
+  });
+  if(tablist && !tablist.hasAttribute('role')) tablist.setAttribute('role','tablist');
+  if(tablist && !tablist.hasAttribute('aria-orientation')) tablist.setAttribute('aria-orientation','horizontal');
+
+  // Reflect initial visibility
+  panels.forEach(p => { p.hidden = !p.classList.contains('active'); });
+
+  function setActive(target){
+    const ns = target.getAttribute('data-tab');
+    tabs.forEach(t => {
+      const sel = t === target;
+      t.classList.toggle('active', sel);
+      t.setAttribute('aria-selected', sel ? 'true' : 'false');
+      t.setAttribute('tabindex', sel ? '0' : '-1');
+    });
+    panels.forEach(p => {
+      const match = p.id === `panel-${ns}`;
+      p.classList.toggle('active', match);
+      p.hidden = !match;
+    });
+    target.focus();
+  }
+
+  // Initialize selected state
+  const current = tabs.find(t => t.classList.contains('active')) || tabs[0];
+  tabs.forEach(t => t.setAttribute('tabindex', t === current ? '0' : '-1'));
+  if(current){ current.setAttribute('aria-selected','true'); }
+
+  // Click activation
+  tabs.forEach(t => t.addEventListener('click', () => setActive(t)));
+
+  // Keyboard navigation
+  const key = {
+    ArrowLeft: -1, Left: -1,
+    ArrowRight: +1, Right: +1
+  };
+  tablist?.addEventListener('keydown', (e) =>{
+    const idx = tabs.indexOf(document.activeElement);
+    if(idx === -1) return;
+    if(e.key === 'Home'){
+      e.preventDefault();
+      tabs[0].focus();
+      return;
+    }
+    if(e.key === 'End'){
+      e.preventDefault();
+      tabs[tabs.length-1].focus();
+      return;
+    }
+    if(e.key in key){
+      e.preventDefault();
+      let next = idx + key[e.key];
+      if(next < 0) next = tabs.length-1;
+      if(next >= tabs.length) next = 0;
+      tabs[next].focus();
+      return;
+    }
+    if(e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      const focused = document.activeElement;
+      if(tabs.includes(focused)) setActive(focused);
+    }
+  });
+})();
+
 /* ------------------ Wishlist storage & UI ------------------ */
 
 /**
